@@ -1,10 +1,17 @@
 extends CharacterBody2D
 
-@export var speed = 300.0
-@export var jump_velocity = -400.0
+
+@export var speed = 0
+@export var jump_velocity = 0
 @export_enum("frog", "man") var character: String
 var jump_dict = {"frog": -700, "man": -400 }
 var speed_dict = {"frog": 100, "man": 300}
+@onready var collider: CollisionObject2D = $CollisionObject2D
+
+func _ready() -> void:
+	#collider.set_collision_mask_value(1, false)
+	#collider.set_collision_mask_value(2, true)
+	character = "man"	
 
 
 func _physics_process(delta: float) -> void:
@@ -13,11 +20,16 @@ func _physics_process(delta: float) -> void:
 		jump_velocity = jump_dict["man"]
 		speed = speed_dict["man"]
 		$AnimatedSprite2D.play("man_idle")
+		#collider.set_collision_mask_value(2, true)
+		#collider.set_collision_mask_value(1, false)
 	elif Input.is_action_pressed("switch") and character == "man":
+		
 		character = "frog"
 		$AnimatedSprite2D.play("frog_idle")
 		jump_velocity = jump_dict["frog"]
 		speed = speed_dict["frog"]
+		#collider.set_collision_mask_value(1, true)
+		#collider.set_collision_mask_value(2, false)
 			
 	if not is_on_floor():
 		velocity += get_gravity() * delta

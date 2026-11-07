@@ -6,14 +6,15 @@ extends CharacterBody2D
 @export_enum("frog", "man") var character: String
 var jump_dict = {"frog": -900, "man": -800 }
 var speed_dict = {"frog": 350, "man": 450}
-@onready var collider: CollisionObject2D = $CollisionObject2D
+
 
 func _ready() -> void:
-	#collider.set_collision_mask_value(1, false)
-	#collider.set_collision_mask_value(2, true)
+	
 	character = "man"
 	jump_velocity = jump_dict["man"]
 	speed = speed_dict["man"]
+	set_collision_mask_value(1, true)
+	set_collision_mask_value(2, false)
 	
 	
 func _process(delta: float) -> void:
@@ -22,20 +23,20 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 #	handle switching .
-	if Input.is_action_pressed("switch") and character == "frog":
+	if Input.is_action_just_pressed("switch") and character == "frog":
 		character = "man"
 		jump_velocity = jump_dict["man"]
 		speed = speed_dict["man"]
 		$AnimatedSprite2D.play("man_idle")
-		#collider.set_collision_mask_value(2, true)
-		#collider.set_collision_mask_value(1, false)
-	elif Input.is_action_pressed("switch") and character == "man":
+		set_collision_mask_value(2, false)
+		set_collision_mask_value(1, true)
+	elif Input.is_action_just_pressed("switch") and character == "man":
 		character = "frog"
 		$AnimatedSprite2D.play("frog_idle")
 		jump_velocity = jump_dict["frog"]
 		speed = speed_dict["frog"]
-		#collider.set_collision_mask_value(1, true)
-		#collider.set_collision_mask_value(2, false)
+		set_collision_mask_value(1, false)
+		set_collision_mask_value(2, true)
 	
 	#falling.		
 	if not is_on_floor():
